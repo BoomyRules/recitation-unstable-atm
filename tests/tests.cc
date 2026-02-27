@@ -104,6 +104,7 @@ TEST_CASE("Deposit negative amount", "[ex-7]") {
   REQUIRE_THROWS_AS(atm.DepositCash(1, 2, -10.0), std::invalid_argument);
   REQUIRE(atm.CheckBalance(1, 2) == 100.00);
 }
+
 // Print Ledger //
 TEST_CASE("Print Ledger throws exception for invalid account or pin", "[ex-8]") {
   Atm atm;
