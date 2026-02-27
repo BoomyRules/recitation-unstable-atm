@@ -60,7 +60,6 @@ TEST_CASE("Example: Simple withdraw", "[ex-2]") {
 
   REQUIRE(sam_account.balance == 280.30);
 }
-
 TEST_CASE("Example: Print Prompt Ledger", "[ex-3]") {
   Atm atm;
   atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
