@@ -51,7 +51,7 @@ TEST_CASE("Example: Create a new account", "[ex-1]") {
   REQUIRE(transactions[{12345678, 1234}] == empty);
 }
 
-TEST_CASE("Example: Simple widthdraw", "[ex-2]") {
+TEST_CASE("Example: Simple withdraw", "[ex-2]") {
   Atm atm;
   atm.RegisterAccount(12345678, 1234, "Sam Sepiol", 300.30);
   atm.WithdrawCash(12345678, 1234, 20);
@@ -73,4 +73,43 @@ TEST_CASE("Example: Print Prompt Ledger", "[ex-3]") {
       "Deposit - Amount: $32000.00, Updated Balance: $72099.90");
   atm.PrintLedger("./prompt.txt", 12345678, 1234);
   REQUIRE(CompareFiles("./ex-1.txt", "./prompt.txt"));
+}
+
+// Register Account //
+TEST_CASE("Register Account throws exception for duplicate account", "[ex-4]") {
+  Atm atm;
+  atm.RegisterAccount(1, 2, "A", 100.00);
+  REQUIRE_THROWS_AS(atm.RegisterAccount(1, 2, "B", 100.0),
+                    std::invalid_argument);
+  REQUIRE(atm.CheckBalance(1, 2) == 100.00);
+}
+// Withdraw Cash //
+TEST_CASE("Withdraw negative amount", "[ex-5]") {
+  Atm atm;
+  atm.RegisterAccount(1, 2, "A", 100.00);
+  REQUIRE_THROWS_AS(atm.WithdrawCash(1, 2, -10.0), std::invalid_argument);
+  REQUIRE(atm.CheckBalance(1, 2) == 100.00);
+}
+
+TEST_CASE("Withdraw more than balance", "[ex-6]") {
+  Atm atm;
+  atm.RegisterAccount(1, 2, "A", 100.00);
+  REQUIRE_THROWS_AS(atm.WithdrawCash(1, 2, 200.0), std::invalid_argument);
+  REQUIRE(atm.CheckBalance(1, 2) == 100.00);
+}
+// Deposit Cash //
+TEST_CASE("Deposit negative amount", "[ex-7]") {
+  Atm atm;
+  atm.RegisterAccount(1, 2, "A", 100.00);
+  REQUIRE_THROWS_AS(atm.DepositCash(1, 2, -10.0), std::invalid_argument);
+  REQUIRE(atm.CheckBalance(1, 2) == 100.00);
+}
+// Print Ledger //
+TEST_CASE("Print Ledger throws exception for invalid account or pin", "[ex-8]") {
+  Atm atm;
+  atm.RegisterAccount(1, 2, "A", 100.00);
+  REQUIRE_THROWS_AS(atm.PrintLedger("./prompt.txt", 1, 3),
+                    std::invalid_argument);
+  REQUIRE_THROWS_AS(atm.PrintLedger("./prompt.txt", 2, 2),
+                    std::invalid_argument);
 }
